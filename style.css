@@ -67,6 +67,7 @@ body {
 .correct {
     background: greenyellow;
 }
+
 .incorrect {
     background: red;
 }
