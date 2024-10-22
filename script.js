@@ -62,6 +62,18 @@ const nextButton = document.getElementById("next-btn");
 let currentQuestionIndex = 0; // starts current question index and current score to 0 to begin the quiz
 let score = 0;
 
+function fakeAuth() {
+    const username = prompt("Enter username:"); // prompt for username
+    const password = prompt("Enter password:"); // prompt for password
+
+    if (username === "user" && password === "password") {
+        startQuiz(); // start the quiz if credentials are correct
+    } else {
+        alert("Incorrect username or password. Please try again."); // shows error message
+        fakeAuth(); // retry authentication
+    }
+}
+
 function startQuiz() {
     currentQuestionIndex = 0; // resets question index and score to 0 on starting quiz
     score = 0;
@@ -99,9 +111,41 @@ function selectAnswer(e) {
     const isCorrect = selectedBtn.dataset.correct === "true"; // checks if the button is correct
     if(isCorrect) {
         selectedBtn.classList.add("correct"); // if the button is correct, the button is marked as correct
+        score++; // increments the score by one for correct answers
     } else {
         selectedBtn.classList.add("incorrect"); // if the button is incorrect, the button is marked as wrong
     }
+    Array.from(answerButtons.children).forEach(button => {
+        if(button.dataset.correct === "true") {
+            button.classList.add("correct"); // if the button is correct, the button is marked as correct
+        }
+        button.disabled = true; // disables the button after it is clicked
+    });
+    nextButton.style.display = "block"; // displays the next button
 }
 
-startQuiz(); // starts the quiz
+function showScore() {
+    resetState();
+    questionElement.innerHTML = "You scored " + score + " correct out of " + questions.length + " questions."; // displays the score
+    nextButton.innerHTML = "Try Again"; // allows quiz to be restarted or replayed after quiz is finished
+    nextButton.style.display = "block"; // displays the next button
+}
+
+function handleNextButton() { // Displays next button and increments the current question index after answering each question
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    } else {
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", () => { // adds event listener to next button and calls the handleNextButton function
+    if(currentQuestionIndex < questions.length){
+        handleNextButton();
+    }else{
+        startQuiz();
+    }
+});
+
+fakeAuth(); // starts the fake authentication process and if the credentials are correct, starts the quiz
