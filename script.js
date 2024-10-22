@@ -82,20 +82,21 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    resetState(); // resets the state of the quiz
-    let currentQuestion = questions[currentQuestionIndex]; // based on current question index, displays the current question
-    let questionNo = currentQuestionIndex + 1; // if index is 0 question number is 1 if index is 1 question number is 2 and so on
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.question; // recieves current question
+    resetState();
+    updateQuestionCounter(); // updates the question counter
+    let currentQuestion = questions[currentQuestionIndex]; // gets the current question based on the current question index
+    let questionNo = currentQuestionIndex + 1; // increments the question number by 1
+    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
 
-    currentQuestion.answers.forEach(answer => {  
-        const button = document.createElement("button"); // for each answer in the current question, creates a button for each answer
-        button.innerHTML = answer.text; // displays the answer text on the button
-        button.classList.add("btn"); // adds a class to the button
-        answerButtons.appendChild(button); // appends the button to the answer button
-        if(answer.correct) {  
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button"); // creates a button for each answer
+        button.innerHTML = answer.text;  // displays the answer text on the button
+        button.classList.add("btn"); // adds the btn class to the button
+        answerButtons.appendChild(button); // appends the button to the answer buttons
+        if (answer.correct) {
             button.dataset.correct = answer.correct; // if the answer is correct, the button is marked as correct
         }
-        button.addEventListener("click", selectAnswer); // when the button is clicked, the selectAnswer function is called
+        button.addEventListener("click", selectAnswer); // adds event listener to the button and calls the selectAnswer function
     });
 }
 
@@ -148,4 +149,12 @@ nextButton.addEventListener("click", () => { // adds event listener to next butt
     }
 });
 
-fakeAuth(); // starts the fake authentication process and if the credentials are correct, starts the quiz
+
+const questionCounter = document.getElementById("question-counter"); // gets the question counter element
+
+function updateQuestionCounter() {
+    questionCounter.innerHTML = `Question ${currentQuestionIndex + 1} of ${questions.length}`; // updates the question counter
+}
+
+fakeAuth();
+
